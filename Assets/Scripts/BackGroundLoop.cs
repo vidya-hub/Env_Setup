@@ -37,10 +37,11 @@ public class BackGroundLoop : MonoBehaviour
             // TODO: find the distance between right edge and mainCamera Edge position
             float distance = backgroundPosition.x - cameraEdgePosition;
 
-            if (distance < distanceFactor && distance <= 0)
+            if (distance < distanceFactor )
             {
-                // TODO: if the distance is < df or distance <= 0 - copy and place that game object on right side
-                Debug.Log("Crossed");
+                // TODO: if the distance is < df Move the background with camera
+                backGround.transform.position = new Vector2(transform.position.x, backGround.transform.position.y);
+                
             }
 
         }
