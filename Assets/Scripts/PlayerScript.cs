@@ -33,7 +33,21 @@ public class PlayerScript : MonoBehaviour
         Vector2 playerPosition = rigidbody.position;
         // handle the bird enemy system
 
-        handleEnemiesSystem();
+        if (indexOfCrossedEnemy < noOfEnimies && enemyList[indexOfCrossedEnemy].gameObject != null)
+        {
+            Debug.Log(indexOfCrossedEnemy);
+            Vector2 enemyPosition = getEnemyPosition(indexOfCrossedEnemy);
+            bool isEnmCrossed = isEnemyCrossed(playerPosition, enemyPosition);
+            if (isEnmCrossed)
+            {
+                indexOfCrossedEnemy++;
+                Debug.Log("Crossed " + indexOfCrossedEnemy);
+            }
+        }
+        else
+        {
+            Debug.Log("Game End");
+        }
     }
     // TODO: when collision happened
     private void OnCollisionEnter2D(Collision2D collision)
@@ -125,21 +139,7 @@ public class PlayerScript : MonoBehaviour
     void handleEnemiesSystem()
     {
         // check player crossed enemy or not
-        if (indexOfCrossedEnemy < noOfEnimies && enemyList[indexOfCrossedEnemy].gameObject != null)
-        {
-            Debug.Log(indexOfCrossedEnemy);
-            Vector2 enemyPosition = getEnemyPosition(indexOfCrossedEnemy);
-            bool isEnmCrossed = isEnemyCrossed(playerPosition, enemyPosition);
-            if (isEnmCrossed)
-            {
-                indexOfCrossedEnemy++;
-                Debug.Log("Crossed " + indexOfCrossedEnemy);
-            }
-        }
-        else
-        {
-            Debug.Log("Game End");
-        }
+   
     }
 
 

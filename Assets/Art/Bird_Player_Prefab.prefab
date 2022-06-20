@@ -9,7 +9,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 330072026096399867, guid: c612ff6b6633e3e4881d5675668d8d5a, type: 3}
       propertyPath: m_Name
-      value: Bird_Player
+      value: Bird_Player_Prefab
       objectReference: {fileID: 0}
     - target: {fileID: 330072026096399867, guid: c612ff6b6633e3e4881d5675668d8d5a, type: 3}
       propertyPath: m_TagString
@@ -103,32 +103,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!61 &173165669
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1826396434341326613}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0.19208527, y: -0.17153633}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 8, y: 6.26}
-    newSize: {x: 8, y: 6.26}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 5.163642, y: 3.5371501}
-  m_EdgeRadius: 0
 --- !u!114 &173165668
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -141,7 +115,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc4993b9d750c93438f09852a9915489, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rigidbody: {fileID: 0}
   playerVel: {x: 1.66, y: 4.07}
   mainCamera: {fileID: 0}
   heightLimit: -9.5
+  fallForce: {x: -500, y: -1000}
+  bounciNess: 0.2
+  rotationAfterAttack: 30
+  enemyGameObject: {fileID: 0}
+  noOfEnimies: 10
