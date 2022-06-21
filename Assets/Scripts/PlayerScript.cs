@@ -20,12 +20,17 @@ public class PlayerScript : MonoBehaviour
     private int indexOfCrossedEnemy = 0;
     private Vector2 playerPosition;
     private float playerXposition;
+    public string enemyTagName = "Bird-Enemy";
+    public string groundTagName = "Ground";
+    public GameObject dashEffect;
+    public float dashEffectDelay;
     void Start()
     {
         rigidbody = this.GetComponent<Rigidbody2D>();
         circleCollider2D = this.GetComponent<CircleCollider2D>();
         playerPosition = rigidbody.transform.position;
         playerXposition = playerPosition.x;
+        dashEffect.SetActive(false);
         setRandomEnemies();
     }
     void Update()
@@ -59,6 +64,7 @@ public class PlayerScript : MonoBehaviour
     // TODO: after collision happened
     private void OnCollisionExit2D(Collision2D collision)
     {
+        StartCoroutine(stopDashEffect());
         animationChange(collision, !isAttacked);
     }
     // TODO: button Method
@@ -81,11 +87,12 @@ public class PlayerScript : MonoBehaviour
     // TODO: on Enemy Attack happend
     private void onEnemyCollide(Collision2D collision)
     {
-        string collIndexName = "Enemy-" + indexOfCrossedEnemy;
-        if (collision.gameObject.name == "Enemy" || collision.gameObject.name == collIndexName)
+        if (collision.gameObject.name == enemyTagName)
         {
+
             rigidbody.velocity = Vector2.zero;
             rigidbody.rotation = rotationAfterAttack;
+            showDashEffect(collision.transform.position);
             setBounciness(bounciNess);
             // animationChange(collision, false, "Enemy");
             rigidbody.AddRelativeForce(fallForce);
@@ -113,7 +120,7 @@ public class PlayerScript : MonoBehaviour
         {
             playerXposition += 10f;
             GameObject newEnemyGameObject = Instantiate(enemyGameObject, getRandomPosition(playerXposition), Quaternion.identity);
-            newEnemyGameObject.name = "Enemy-" + i;
+            newEnemyGameObject.gameObject.name = enemyTagName;
             setEnemyRotaion(newEnemyGameObject);
             enemyList.Add(newEnemyGameObject);
         }
@@ -122,7 +129,7 @@ public class PlayerScript : MonoBehaviour
     private Vector2 getRandomPosition(float newPlayerX)
     {
         float _xAxis = Random.Range(playerXposition, newPlayerX);
-        float _yAxis = Random.Range(playerPosition.y, playerPosition.y - 10);
+        float _yAxis = Random.Range(playerPosition.y - 3, playerPosition.y - 7);
         return new Vector2(_xAxis, _yAxis);
     }
     // TODO: get Enemy Position
@@ -139,7 +146,7 @@ public class PlayerScript : MonoBehaviour
     void handleEnemiesSystem()
     {
         // check player crossed enemy or not
-   
+
     }
 
 
@@ -148,5 +155,17 @@ public class PlayerScript : MonoBehaviour
     {
 
     }
-
+    IEnumerator stopDashEffect()
+    {
+        print("Started");
+        yield return new WaitForSeconds(dashEffectDelay);
+        print("Stop");
+        dashEffect.SetActive(false);
+    }
+    private void showDashEffect(Vector2 collisionPosition)
+    {
+        dashEffect = Instantiate(dashEffect, this.transform.position, Quaternion.identity);
+        dashEffect.transform.SetParent(this.transform);
+        dashEffect.SetActive(true);
+    }
 }
