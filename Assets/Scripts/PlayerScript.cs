@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using TMPro;
 public class PlayerScript : MonoBehaviour
 
 {
@@ -24,12 +24,18 @@ public class PlayerScript : MonoBehaviour
     public string groundTagName = "Ground";
     public GameObject dashEffect;
     public float dashEffectDelay;
+    public int playerHealth = 5;
+    public int score = 0;
+    public HealthScript healthBar;
+    public TextMeshProUGUI scoreText;
     void Start()
     {
+        scoreText.text = "Score 0";
         rigidbody = this.GetComponent<Rigidbody2D>();
         circleCollider2D = this.GetComponent<CircleCollider2D>();
         playerPosition = rigidbody.transform.position;
         playerXposition = playerPosition.x;
+        healthBar.setMaxHealth(playerHealth);
         dashEffect.SetActive(false);
         setRandomEnemies();
     }
@@ -40,18 +46,31 @@ public class PlayerScript : MonoBehaviour
 
         if (indexOfCrossedEnemy < noOfEnimies && enemyList[indexOfCrossedEnemy].gameObject != null)
         {
-            Debug.Log(indexOfCrossedEnemy);
+
             Vector2 enemyPosition = getEnemyPosition(indexOfCrossedEnemy);
             bool isEnmCrossed = isEnemyCrossed(playerPosition, enemyPosition);
             if (isEnmCrossed)
             {
                 indexOfCrossedEnemy++;
+                scoreText.text = "Score " + indexOfCrossedEnemy;
+
                 Debug.Log("Crossed " + indexOfCrossedEnemy);
             }
         }
-        else
+
+
+    }
+    private void LateUpdate()
+    {
+        if (playerHealth == 0)
         {
-            Debug.Log("Game End");
+            Debug.Log("Done");
+            rigidbody.velocity = Vector2.zero;
+            rigidbody.rotation = rotationAfterAttack;
+            setBounciness(bounciNess);
+            rigidbody.AddRelativeForce(fallForce);
+            isAttacked = true;
+            playerHealth = 5;
         }
     }
     // TODO: when collision happened
@@ -64,7 +83,6 @@ public class PlayerScript : MonoBehaviour
     // TODO: after collision happened
     private void OnCollisionExit2D(Collision2D collision)
     {
-        StartCoroutine(stopDashEffect());
         animationChange(collision, !isAttacked);
     }
     // TODO: button Method
@@ -90,13 +108,13 @@ public class PlayerScript : MonoBehaviour
         if (collision.gameObject.name == enemyTagName)
         {
 
-            rigidbody.velocity = Vector2.zero;
-            rigidbody.rotation = rotationAfterAttack;
-            showDashEffect(collision.transform.position);
-            setBounciness(bounciNess);
-            // animationChange(collision, false, "Enemy");
-            rigidbody.AddRelativeForce(fallForce);
-            isAttacked = true;
+            if (playerHealth > 0)
+            {
+                rigidbody.velocity = new Vector2(-5f, 0);
+                playerHealth--;
+                healthBar.setCurrentHealth(playerHealth);
+            }
+
         }
     }
     // TODO: set the bounciness of the player when Enemy Attack happend
