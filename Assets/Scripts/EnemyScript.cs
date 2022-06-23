@@ -19,11 +19,5 @@ public class EnemyScript : MonoBehaviour
     {
         enemy.transform.position = startingPosition;
     }
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.name == "Bird_Player")
-        {
-            Destroy(enemy.gameObject);
-        }
-    }
+
 }

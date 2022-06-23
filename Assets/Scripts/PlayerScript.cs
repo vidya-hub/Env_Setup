@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
+
 public class PlayerScript : MonoBehaviour
 
 {
@@ -30,6 +32,7 @@ public class PlayerScript : MonoBehaviour
     public TextMeshProUGUI scoreText;
     void Start()
     {
+        Screen.orientation = ScreenOrientation.LandscapeLeft;
         scoreText.text = "Score 0";
         rigidbody = this.GetComponent<Rigidbody2D>();
         circleCollider2D = this.GetComponent<CircleCollider2D>();
@@ -46,24 +49,21 @@ public class PlayerScript : MonoBehaviour
 
         if (indexOfCrossedEnemy < noOfEnimies && enemyList[indexOfCrossedEnemy].gameObject != null)
         {
-
+            Debug.Log("Crossed " + indexOfCrossedEnemy);
             Vector2 enemyPosition = getEnemyPosition(indexOfCrossedEnemy);
             bool isEnmCrossed = isEnemyCrossed(playerPosition, enemyPosition);
             if (isEnmCrossed)
             {
                 indexOfCrossedEnemy++;
                 scoreText.text = "Score " + indexOfCrossedEnemy;
-
-                Debug.Log("Crossed " + indexOfCrossedEnemy);
             }
         }
-
-
     }
     private void LateUpdate()
     {
         if (playerHealth == 0)
         {
+            healthBar.gameObject.SetActive(false);
             Debug.Log("Done");
             rigidbody.velocity = Vector2.zero;
             rigidbody.rotation = rotationAfterAttack;
@@ -71,6 +71,8 @@ public class PlayerScript : MonoBehaviour
             rigidbody.AddRelativeForce(fallForce);
             isAttacked = true;
             playerHealth = 5;
+            jumpToGameOverScreen();
+
         }
     }
     // TODO: when collision happened
@@ -107,7 +109,6 @@ public class PlayerScript : MonoBehaviour
     {
         if (collision.gameObject.name == enemyTagName)
         {
-
             if (playerHealth > 0)
             {
                 rigidbody.velocity = new Vector2(-5f, 0);
@@ -129,7 +130,6 @@ public class PlayerScript : MonoBehaviour
         Debug.DrawLine(enemyPosition, playerPosition);
         Vector2 vectorDistance = enemyPosition - playerPosition;
         return vectorDistance.x < 0;
-
     }
     // TODO: set Random Enimies
     private void setRandomEnemies()
@@ -153,6 +153,7 @@ public class PlayerScript : MonoBehaviour
     // TODO: get Enemy Position
     Vector2 getEnemyPosition(int indexOfEnemy)
     {
+        Debug.Log(indexOfEnemy);
         return enemyList[indexOfEnemy].transform.position;
     }
 
@@ -161,16 +162,20 @@ public class PlayerScript : MonoBehaviour
         enemyGm.transform.rotation = new Quaternion(0, 0.999961913f, 0, -0.00872646365f);
     }
 
+
+    public void jumpToGameOverScreen()  
+    {
+        StartCoroutine(gamoverDelay());
+        SceneManager.LoadScene("GameOverScreen");
+    }
+
+    IEnumerator gamoverDelay()
+    {
+        yield return new WaitForSeconds(2);
+    }
     void handleEnemiesSystem()
     {
         // check player crossed enemy or not
-
-    }
-
-
-    // TODO: destory enemy
-    private void destoyEnemyAfterCrossed()
-    {
 
     }
     IEnumerator stopDashEffect()
