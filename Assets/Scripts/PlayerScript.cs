@@ -30,9 +30,15 @@ public class PlayerScript : MonoBehaviour
     public int score = 0;
     public HealthScript healthBar;
     public TextMeshProUGUI scoreText;
-    void Start()
+    private string playerScoreString = "playerScore";
+
+    private void Awake()
     {
         Screen.orientation = ScreenOrientation.LandscapeLeft;
+
+    }
+    void Start()
+    {
         scoreText.text = "Score 0";
         rigidbody = this.GetComponent<Rigidbody2D>();
         circleCollider2D = this.GetComponent<CircleCollider2D>();
@@ -55,7 +61,9 @@ public class PlayerScript : MonoBehaviour
             if (isEnmCrossed)
             {
                 indexOfCrossedEnemy++;
-                scoreText.text = "Score " + indexOfCrossedEnemy;
+                storeScoreData(indexOfCrossedEnemy);
+                scoreText.text = "Score " + getScoreData();
+
             }
         }
     }
@@ -163,7 +171,7 @@ public class PlayerScript : MonoBehaviour
     }
 
 
-    public void jumpToGameOverScreen()  
+    public void jumpToGameOverScreen()
     {
         StartCoroutine(gamoverDelay());
         SceneManager.LoadScene("GameOverScreen");
@@ -191,4 +199,14 @@ public class PlayerScript : MonoBehaviour
         dashEffect.transform.SetParent(this.transform);
         dashEffect.SetActive(true);
     }
+
+    private void storeScoreData(int playerScore)
+    {
+        PlayerPrefs.SetInt(playerScoreString, playerScore);
+    }
+    private int getScoreData()
+    {
+        return PlayerPrefs.GetInt(playerScoreString);
+    }
 }
+

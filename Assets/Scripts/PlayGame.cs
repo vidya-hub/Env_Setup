@@ -5,20 +5,15 @@ using UnityEngine.SceneManagement;
 
 public class PlayGame : MonoBehaviour
 {
+    private void Awake()
+    {
+        Screen.orientation = ScreenOrientation.LandscapeLeft;
+
+    }
     // Start is called before the first frame update
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
     public void startGame()
     {
+        Debug.Log("Here");
         SceneManager.LoadScene("GamePlayScreen");
     }
 }
